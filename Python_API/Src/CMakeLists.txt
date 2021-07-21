@@ -38,11 +38,12 @@ find_package(Python3 COMPONENTS Interpreter Development)
 set(PYTHON_INTERPRETER_PATH ${Python3_EXECUTABLE})
 
 if(WIN32 OR MSYS)
-    # target_link_libraries(${LIBRARY_NAME} Python3::Python)
+    message(STATUS "${Python3_VERSION}=${${Python3_VERSION}}")
+    set(PYTHON_DLL_NAME "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}.dll")
+    message(STATUS "USING DLL: ${PYTHON_DLL_NAME}")
     include_directories(c:\\Miniconda\\envs\\test\\include)
     link_directories(c:\\Miniconda\\envs\\test\\libs c:\\Miniconda\\envs\\test\\lib c:\\Miniconda\\envs\\test)
-    # target_link_libraries(${LIBRARY_NAME} c:\\Miniconda\\envs\\test\\python3.dll c:\\Miniconda\\envs\\test\\python37.dll)
-    target_link_libraries(${LIBRARY_NAME} c:\\Miniconda\\envs\\test\\python38.dll)
+    target_link_libraries(${LIBRARY_NAME} c:\\Miniconda\\envs\\test\\${PYTHON_DLL_NAME})
 endif()
 
 # Set -Wl,-undefined,dynamic_lookup to OTHER_LDFLAGS
