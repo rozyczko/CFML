@@ -38,6 +38,7 @@ jobs:
         run: |
           C:\\Miniconda\\condabin\\conda.bat activate test
           which python
+          ls -l c:\\Miniconda\\envs\\test
           python -V
           pip install delvewheel
           pip wheel ./ --no-deps -w ./old/

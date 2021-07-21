@@ -39,7 +39,7 @@ set(PYTHON_INTERPRETER_PATH ${Python3_EXECUTABLE})
 
 if(WIN32 OR MSYS)
     # target_link_libraries(${LIBRARY_NAME} Python3::Python)
-    target_link_libraries(${LIBRARY_NAME} /c/Miniconda/envs/test/python3.dll)
+    target_link_libraries(${LIBRARY_NAME} c:\\Miniconda\\envs\\test\\python3.dll)
 endif()
 
 # Set -Wl,-undefined,dynamic_lookup to OTHER_LDFLAGS
