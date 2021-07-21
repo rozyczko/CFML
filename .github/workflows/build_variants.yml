@@ -1,83 +1,29 @@
-# Adapted from https://github.com/RalfG/python-wheels-manylinux-build/blob/master/full_workflow_example.yml
-name: Build CFML wheels on various systems
+name: Build CFML wheels on Windows
 
 on:
   push:
-    branches: [ common_wheel ]
+    branches: [ create_wheel ]
 
 jobs:
-#   create-Linux:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v2
-
-#     - name: Build manylinux wheels
-#       run:  docker run -e PLAT=manylinux2010_x86_64 -v `pwd`:/io quay.io/pypa/manylinux2010_x86_64 /io/Scripts/buildscript.sh
-
-#     - uses: actions/upload-artifact@v2
-#       with:
-#         name: CrysFML - Linux
-#         path: ${{ github.workspace }}/dist/*.whl
-
-#   create-OSX:
-#     strategy:
-#       max-parallel: 4
-#       matrix:
-#         python-version: ['3.6', '3.7', '3.8', '3.9']
-#         os: [macos-10.15]
-#         gcc_v: [ 10 ] # Version of GFortran we want to use.
-# #        exclude: # Currently only python > 3.8 is supported on macos-11.0 and > 3.6 on macos-10.15
-# #          - os: macos-11.0
-# #            python-version: '3.7'
-# #          - os: macos-11.0
-# #            python-version: '3.8'
-
-#     runs-on: ${{ matrix.os }}
-
-#     steps:
-#     - uses: actions/checkout@v2
-
-#     - name: Setup python
-#       uses: actions/setup-python@v1
-#       with:
-#         python-version: ${{matrix.python-version}}
-
-#     - name: Install cmake
-#       run: pip3 install cmake delocate wheel
-
-#     - name: Build CFML (OSX)
-#       env:
-#         FC: gfortran-${{ matrix.gcc_v }}
-#         CC: gcc-${{ matrix.gcc_v }}
-#       run: |
-#         pip3 wheel ./ --no-deps -w ./old/
-#         delocate-wheel -w dist -v ./old/*.whl
-#     - uses: actions/upload-artifact@v2
-#       with:
-#         name: CrysFML - ${{ matrix.os }} - Python ${{ matrix.python-version }}
-#         path: ./dist/*.whl
-
   create-Windows:
     strategy:
-      max-parallel: 4
+      max-parallel: 1
       matrix:
-        # python-version: [ '3.7', '3.8', '3.9']
-        python-version: [ '3.8']
+        python-version: ['3.7']
         os: [ windows-latest ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
+
       - uses: actions/checkout@v2
-
-      - name: Setup python
-        uses: actions/setup-python@v1
+      
+      - uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: ${{matrix.python-version}}
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+          auto-activate-base: true
 
-      - name: Install wheel
-        run: pip install wheel
 
       - uses: msys2/setup-msys2@v2
         with:
@@ -89,31 +35,38 @@ jobs:
       - name: Build CFML
         shell: msys2 {0}
         id: build
-        run: pip wheel ./ --no-deps -w ./dist/
+        run: |
+          C:\\Miniconda\\condabin\\conda.bat activate test
+          which python
+          python -V
+          pip install delvewheel
+          pip wheel ./ --no-deps -w ./old/
+          delvewheel show ./old/*.whl
+          delvewheel repair --no-mangle-all -w dist -v ./old/*.whl
         env:
           MINGW_ARCH: MINGW64
 
       - uses: actions/upload-artifact@v2
         with:
-          name: CrysFML - ${{ matrix.os }} - Python ${{ matrix.python-version }}
+          name: CrysFML - Windows
           path: ./dist/*.whl
 
   Upload_Artifacts:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: [create-Windows]
     steps:
-    - uses: actions/checkout@v2
     - uses: actions/download-artifact@v2
+    - name: What is downloaded
+      run: |
+        ls -al
     - name: Upload Artifacts GitHub releases
-#      if: github.event_name == 'push'
       uses: ncipollo/release-action@v1
       with:
-        draft: falase
+        draft: false
         prerelease: true
         allowUpdates: true
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        artifacts: "./dist/*.whl"
+        artifacts: "./**/*.whl"
         tag: "CurrentBuild"
-        commit: ${{ env.BRANCH_NAME }}
-        body: "This is a build of the CFML libraries."
+        body: "This is a Windows build of the CFML_api library."

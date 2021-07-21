@@ -38,14 +38,7 @@ find_package(Python3 COMPONENTS Interpreter Development)
 set(PYTHON_INTERPRETER_PATH ${Python3_EXECUTABLE})
 
 if(WIN32 OR MSYS)
-    message(STATUS "PYTHON_INTERPRETER_PATH =${PYTHON_INTERPRETER_PATH}")
-    message(STATUS "Python_LIBRARIES =${Python_LIBRARIES}")
-    message(STATUS "Python_LIBRARY_DIRS =${Python_LIBRARY_DIRS}")
-    message(STATUS "Python_RUNTIME_LIBRARY_DIRS =${Python_RUNTIME_LIBRARY_DIRS}")
-    # export PATH=`cygpath "${pythonLocation}"`:$PATH
     target_link_libraries(${LIBRARY_NAME} Python3::Python)
-    # target_include_directories(${LIBRARY_NAME} PRIVATE ${Python3_INCLUDE_DIRS})
-    # set_target_properties(${LIBRARY_NAME} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
 endif()
 
 # Set -Wl,-undefined,dynamic_lookup to OTHER_LDFLAGS
