@@ -57,7 +57,6 @@ jobs:
     needs: [create-Windows]
     steps:
     - uses: actions/download-artifact@v2
-    - name: What is downloaded
     - name: Upload Artifacts GitHub releases
       uses: ncipollo/release-action@v1
       with:
