@@ -52,7 +52,7 @@ jobs:
           path: ./dist/*.whl
 
   Upload_Artifacts:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     needs: [create-Windows]
     steps:
     - uses: actions/download-artifact@v2
