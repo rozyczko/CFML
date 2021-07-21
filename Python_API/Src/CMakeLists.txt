@@ -38,7 +38,6 @@ find_package(Python3 COMPONENTS Interpreter Development)
 set(PYTHON_INTERPRETER_PATH ${Python3_EXECUTABLE})
 
 if(WIN32 OR MSYS)
-    set(PYTHON_INTERPRETER_PATH c:\\Miniconda\\envs\\test\\python.exe)
     message(STATUS "${Python3_VERSION}=${${Python3_VERSION}}")
     set(PYTHON_DLL_NAME "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}.dll")
     message(STATUS "USING DLL: ${PYTHON_DLL_NAME}")
