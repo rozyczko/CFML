@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        python-version: ['3.8']
+        python-version: ['3.7', '3.8']
         os: [ windows-latest ]
 
     runs-on: ${{ matrix.os }}
@@ -38,6 +38,8 @@ jobs:
         run: |
           C:\\Miniconda\\condabin\\conda.bat activate test
           which python
+          echo "PATH: " $PATH
+          echo "PYTHONPATH: " $PYTHONPATH
           ls -l c:\\Miniconda\\envs\\test
           python -V
           pip install delvewheel
