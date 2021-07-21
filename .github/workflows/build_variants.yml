@@ -2,7 +2,7 @@ name: Build CFML wheels on Windows
 
 on:
   push:
-    branches: [ create_wheel ]
+    branches: [ common_wheel ]
 
 jobs:
   create-Windows:
