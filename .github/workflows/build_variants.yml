@@ -9,16 +9,16 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        python-version: ['3.7', '3.8']
+        python-version: ['3.9', '3.10', '3.11']
         os: [ windows-latest ]
 
     runs-on: ${{ matrix.os }}
 
     steps:
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
@@ -49,16 +49,17 @@ jobs:
         env:
           MINGW_ARCH: MINGW64
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: CrysFML - Windows
           path: ./dist/*.whl
+          overwrite: true
 
   Upload_Artifacts:
     runs-on: windows-latest
     needs: [create-Windows]
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
     - name: Upload Artifacts GitHub releases
       uses: ncipollo/release-action@v1
       with:
