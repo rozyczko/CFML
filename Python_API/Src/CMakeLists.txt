@@ -46,7 +46,7 @@ if(WIN32 OR MSYS)
     target_link_libraries(${LIBRARY_NAME} c:\\Miniconda\\envs\\test\\${PYTHON_DLL_NAME})
 endif()
 
-fail now please
+# fail now please
 
 # Set -Wl,-undefined,dynamic_lookup to OTHER_LDFLAGS
 # Set include and linking
